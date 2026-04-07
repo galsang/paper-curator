@@ -5,19 +5,24 @@ research_profile:
   lab: "HYU NLP Lab (Hanyang University)"
   homepage: "https://nlp.hanyang.ac.kr"
   interests:
-    - "Dialogue Systems (task-oriented, chitchat, conversational AI)"
-    - "Retrieval-Augmented Generation (RAG)"
-    - "Knowledge Conflict and Knowledge Reasoning"
-    - "Knowledge Unlearning in LLMs"
-    - "Multimodal Reasoning (cross-modal, financial reasoning)"
-    - "LLM Evaluation and Benchmarking"
-    - "Multilingual NLP (idioms, low-resource languages)"
+    - "Dialogue Systems (task-oriented, chitchat, proactive conversational AI)"
+    - "Retrieval-Augmented Generation (RAG, knowledge conflict, multi-hop reasoning)"
+    - "Knowledge Unlearning in LLMs (localization, parameter attribution)"
+    - "Multimodal & Omni-Modal Reasoning (cross-modal, multi-hop, financial)"
+    - "LLM Evaluation and Benchmarking (confidence estimation, calibration)"
+    - "LLM Confidence and Uncertainty (verbalized confidence, calibration)"
+    - "Multilingual NLP (idioms, low-resource languages, cultural understanding)"
   recent_papers:
-    - "TACT: TOD-And-Chitchat Transition (EMNLP)"
-    - "MAGIC: Multi-Hop and Graph-Based RAG Benchmark (EMNLP Findings)"
-    - "MIDAS: Multilingual Idiom Dataset (EMNLP)"
-    - "Knowledge Unlearning (EMNLP)"
-    - "FCMR: Financial Cross-Modal Reasoning (ACL)"
+    # ACL 2026
+    - "ADVICE: Answer-Dependent Verbalized Confidence Estimation (ACL 2026 Main)"
+    - "OMHBench: Benchmarking Balanced and Grounded Omni-Modal Multi-Hop Reasoning (ACL 2026 Findings)"
+    # ACL 2025
+    - "FCMR: Financial Cross-Modal Reasoning (ACL 2025 Main)"
+    # EMNLP 2025
+    - "TACT: Beyond TOD and Chitchat - Proactive and Transition-Aware Agents (EMNLP 2025 Main)"
+    - "MIDAS: Memorization or Reasoning? Idiom Understanding of LLMs (EMNLP 2025 Main)"
+    - "Knowledge Unlearning: Localization vs Parameter Attribution (EMNLP 2025 Main)"
+    - "MAGIC: Multi-Hop and Graph-Based RAG Benchmark (EMNLP 2025 Findings)"
 
 # 소스 설정
 sources:
@@ -53,6 +58,9 @@ feedback:
     - "RAG benchmarks and evaluation"
     - "dialogue systems"
     - "knowledge reasoning"
+    - "LLM confidence, calibration, uncertainty estimation"
+    - "omni-modal and cross-modal reasoning"
+    - "multi-hop reasoning and benchmarks"
   avoid:
     - "computer vision (pure CV without NLP)"
     - "autonomous driving"
@@ -61,3 +69,8 @@ feedback:
   extra_keywords:
     - "instruction tuning"
     - "preference learning"
+    - "confidence estimation"
+    - "calibration"
+    - "verbalized uncertainty"
+    - "omni-modal"
+    - "proactive dialogue"
