@@ -1,0 +1,63 @@
+# Paper Curator Configuration
+
+# 연구 관심사 (Claude API가 논문 필터링에 사용)
+research_profile:
+  lab: "HYU NLP Lab (Hanyang University)"
+  homepage: "https://nlp.hanyang.ac.kr"
+  interests:
+    - "Dialogue Systems (task-oriented, chitchat, conversational AI)"
+    - "Retrieval-Augmented Generation (RAG)"
+    - "Knowledge Conflict and Knowledge Reasoning"
+    - "Knowledge Unlearning in LLMs"
+    - "Multimodal Reasoning (cross-modal, financial reasoning)"
+    - "LLM Evaluation and Benchmarking"
+    - "Multilingual NLP (idioms, low-resource languages)"
+  recent_papers:
+    - "TACT: TOD-And-Chitchat Transition (EMNLP)"
+    - "MAGIC: Multi-Hop and Graph-Based RAG Benchmark (EMNLP Findings)"
+    - "MIDAS: Multilingual Idiom Dataset (EMNLP)"
+    - "Knowledge Unlearning (EMNLP)"
+    - "FCMR: Financial Cross-Modal Reasoning (ACL)"
+
+# 소스 설정
+sources:
+  arxiv:
+    categories:
+      - "cs.CL"    # Computation and Language
+      - "cs.AI"    # Artificial Intelligence
+      - "cs.LG"    # Machine Learning
+    max_papers_per_category: 30
+  alphaxiv:
+    url: "https://www.alphaxiv.org/"
+  huggingface:
+    url: "https://huggingface.co/papers"
+
+# 추천 설정
+recommendation:
+  per_source: 10        # 소스당 추천 수
+  hype_section: true    # Agent/trending 별도 섹션
+  include_honorable_mentions: true
+
+# 알림 설정
+notifications:
+  slack:
+    enabled: false
+    # webhook_url은 .env에서 관리
+  notion:
+    enabled: false
+    # api_key와 database_id는 .env에서 관리
+
+# 피드백 (사용자 피드백 반영)
+feedback:
+  prefer:
+    - "RAG benchmarks and evaluation"
+    - "dialogue systems"
+    - "knowledge reasoning"
+  avoid:
+    - "computer vision (pure CV without NLP)"
+    - "autonomous driving"
+    - "3D generation"
+    - "audio/speech only"
+  extra_keywords:
+    - "instruction tuning"
+    - "preference learning"
