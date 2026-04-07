@@ -10,6 +10,13 @@ import feedparser
 import httpx
 from bs4 import BeautifulSoup
 
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+}
+HTTP_CLIENT_KWARGS = {"timeout": 30, "follow_redirects": True, "headers": HEADERS}
+
 
 @dataclass
 class Paper:
@@ -51,7 +58,9 @@ def fetch_arxiv(categories: list[str], max_per_category: int = 50) -> list[Paper
             f"&sortBy=submittedDate&sortOrder=descending"
         )
         try:
-            feed = feedparser.parse(url)
+            # Fetch via httpx with headers, then parse
+            resp = httpx.get(url, **HTTP_CLIENT_KWARGS)
+            feed = feedparser.parse(resp.text)
             for entry in feed.entries:
                 arxiv_id = entry.id.split("/abs/")[-1]
                 if arxiv_id in seen_ids:
@@ -83,7 +92,7 @@ def fetch_alphaxiv() -> list[Paper]:
     url = "https://www.alphaxiv.org/"
 
     try:
-        resp = httpx.get(url, timeout=30, follow_redirects=True)
+        resp = httpx.get(url, **HTTP_CLIENT_KWARGS)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
@@ -141,8 +150,7 @@ def _fetch_alphaxiv_fallback() -> list[Paper]:
     try:
         resp = httpx.get(
             "https://www.alphaxiv.org/explore",
-            timeout=30,
-            follow_redirects=True,
+            **HTTP_CLIENT_KWARGS,
         )
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
@@ -165,7 +173,7 @@ def _fetch_alphaxiv_fallback() -> list[Paper]:
 
 
 def fetch_huggingface(days: int = 3) -> list[Paper]:
-    """Scrape trending papers from HuggingFace Papers (recent days)."""
+    """Fetch trending papers from HuggingFace via API."""
     papers = []
     seen_ids = set()
 
@@ -173,9 +181,45 @@ def fetch_huggingface(days: int = 3) -> list[Paper]:
     dates = [(today.replace(day=today.day - i)).strftime("%Y-%m-%d") for i in range(days)]
 
     for date in dates:
+        # Try the API endpoint first (more reliable than scraping)
+        api_url = f"https://huggingface.co/api/daily_papers?date={date}"
+        try:
+            resp = httpx.get(api_url, **HTTP_CLIENT_KWARGS)
+            resp.raise_for_status()
+            data = resp.json()
+
+            for item in data:
+                paper = item.get("paper", {})
+                paper_id = paper.get("id", "")
+                title = paper.get("title", "")
+
+                if not paper_id or paper_id in seen_ids:
+                    continue
+                seen_ids.add(paper_id)
+
+                authors = [a.get("name", "") for a in paper.get("authors", [])]
+                votes = item.get("numUpvotes", 0)
+                comments = item.get("numComments", 0)
+
+                papers.append(Paper(
+                    title=title,
+                    paper_id=paper_id,
+                    source="huggingface",
+                    url=f"https://huggingface.co/papers/{paper_id}",
+                    authors=authors[:5],
+                    abstract=paper.get("summary", "")[:200],
+                    votes=votes,
+                    comments=comments,
+                    published=date,
+                ))
+            continue
+        except Exception:
+            pass
+
+        # Fallback: scrape the HTML page
         url = f"https://huggingface.co/papers?date={date}"
         try:
-            resp = httpx.get(url, timeout=30, follow_redirects=True)
+            resp = httpx.get(url, **HTTP_CLIENT_KWARGS)
             resp.raise_for_status()
             soup = BeautifulSoup(resp.text, "html.parser")
 
